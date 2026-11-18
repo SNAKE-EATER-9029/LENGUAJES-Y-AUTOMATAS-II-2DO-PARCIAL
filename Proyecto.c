@@ -3,20 +3,42 @@
 #include <string.h>
 
 /*
+   ¿Qué entra?    -> char *token (Palabra extraída de la línea de código)
+   ¿Qué hace?     -> Compara el token contra un arreglo de palabras reservadas del lenguaje C.
+   ¿Qué retorna?  -> int (1 si es palabra reservada, 0 si no lo es)
+*/
+int es_reservada(char *token) {
+    const char *reservadas[] = {"int", "float", "char", "void", "if", "else", "while", "for", "return"};
+    int total = 9;
+    
+    for (int i = 0; i < total; i++) {
+        if (strcmp(token, reservadas[i]) == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+/*
    ¿Qué entra?    -> char *linea (Cadena de texto con una línea del archivo)
-   ¿Qué hace?     -> Divide la línea en tokens separados por espacios o saltos de línea y los imprime.
+   ¿Qué hace?     -> Divide la línea en tokens y clasifica si son palabras reservadas o tokens generales.
    ¿Qué retorna?  -> void (No retorna ningún valor)
 */
 void separar_tokens(char *linea) {
     char *token = strtok(linea, " \t\n\r");
     while (token != NULL) {
-        printf("Token: %s\n", token);
+        if (es_reservada(token)) {
+            printf("Palabra reservada: %s\n", token);
+        } else {
+            printf("Token: %s\n", token);
+        }
         token = strtok(NULL, " \t\n\r");
     }
 }
+
 /*
    ¿Qué entra?    -> void (Ningún parámetro inicial)
-   ¿Qué hace?     -> Abre el archivo codigo.txt y lee cada línea para mostrarla en pantalla.
+   ¿Qué hace?     -> Abre el archivo codigo.txt y manda cada línea a la función separar_tokens.
    ¿Qué retorna?  -> int (0 al terminar con éxito, 1 si hay error de apertura)
 */
 int main() {
@@ -29,6 +51,9 @@ int main() {
         separar_tokens(buffer);
     }
 
+    fclose(f);
+    return 0;
+}
     fclose(f);
     return 0;
 }
