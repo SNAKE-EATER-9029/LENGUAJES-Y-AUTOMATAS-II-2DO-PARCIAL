@@ -20,8 +20,26 @@ int es_reservada(char *token) {
 }
 
 /*
+   ¿Qué entra?    -> char *token (Cadena extraída de la línea de código)
+   ¿Qué hace?     -> Verifica si todos los caracteres del token son dígitos numéricos (o un punto decimal).
+   ¿Qué retorna?  -> int (1 si es un número válido, 0 si no lo es)
+*/
+int es_numero(char *token) {
+    int puntos = 0;
+    for (int i = 0; token[i] != '\0'; i++) {
+        if (token[i] == '.') {
+            puntos++;
+            if (puntos > 1) return 0;
+        } else if (token[i] < '0' || token[i] > '9') {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+/*
    ¿Qué entra?    -> char *linea (Cadena de texto con una línea del archivo)
-   ¿Qué hace?     -> Divide la línea en tokens y clasifica si son palabras reservadas o tokens generales.
+   ¿Qué hace?     -> Divide la línea en tokens y los clasifica en palabras reservadas, números o tokens generales.
    ¿Qué retorna?  -> void (No retorna ningún valor)
 */
 void separar_tokens(char *linea) {
@@ -29,6 +47,8 @@ void separar_tokens(char *linea) {
     while (token != NULL) {
         if (es_reservada(token)) {
             printf("Palabra reservada: %s\n", token);
+        } else if (es_numero(token)) {
+            printf("Numero: %s\n", token);
         } else {
             printf("Token: %s\n", token);
         }
@@ -51,9 +71,6 @@ int main() {
         separar_tokens(buffer);
     }
 
-    fclose(f);
-    return 0;
-}
     fclose(f);
     return 0;
 }
